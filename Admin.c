@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct admin{
+struct Admin
+{
     char nama[100];
     char userid[20];
     char passwd[100];
     char telp[14];
-    int a;
-};
+} admin;
 
 
 struct buku {
@@ -17,43 +17,74 @@ struct buku {
     int b;
 }buku[100];
 
-void daftar() {
+void daftar(struct Admin admin) {
     FILE *fd;
+    FILE *fu;
+    FILE *fp;
     fd = fopen("Record.txt", "a+");
+    fu = fopen("User.txt", "a+");
+    fp = fopen("Passwd.txt", "a+");
     printf("Masukkan Nama Anda           : ");
-    scanf("%s[^\n]", &admin.nama);
+    scanf("%s", &admin.nama);
+    fputs (admin.nama, fd);
+    fputs ("\n", fd);
     printf("Masukkan User Id Anda        : ");
     scanf("%s", &admin.userid);
+    fputs (admin.userid, fd);
+    fputs (admin.userid, fu);
+    fputs ("\n", fd);
+    fputs ("\n", fu);
     printf("Masukkan Password Anda       : ");
     scanf("%s", &admin.passwd);
+    fputs (admin.passwd, fd);
+    fputs (admin.passwd, fp);
+    fputs ("\n", fd);
+    fputs ("\n", fp);
     printf("Masukkan No Telephone Anda   : ");
     scanf("%s", &admin.telp);
-    fwrite(&admin, sizeof(admin), 100, fd);
+    fputs (admin.telp, fd);
+    fputs ("\n", fd);
     fclose(fd);
 }
 
 void login() {
     FILE *fl;
-    char id, pwd, checkid, checkpwd, s, r;
-    int a;
+    FILE *flp;
+    fl = fopen("User.txt", "r");
+    flp = fopen("Passwd.txt", "r");
+    char id[20], pwd[100];
+    int checkid, checkpwd;
+    char checku[20], checkp[100];
     printf("Masukkan User Id Anda  : ");
     scanf("%s", &id);
+    //printf("this is the user name %s\n", id);
+    fscanf(fl, "%[^\n]", checku);
     printf("Masukkan Password Anda : ");
     scanf("%s", &pwd);
-    if(id == 0 && pwd == 0){
-        printf("User Id atau Password yang anda masukkan Salah!");
+    //printf(" this is the password %s\n", pwd);
+    fscanf(flp, "%[^\n]", checkp);
+    //printf("%s\n", checku);
+    //printf("%s\n", checkp);
+    checkid = strcmp(id, checku);
+    //printf("%d\n", checkid);
+    checkpwd = strcmp(pwd, checkp);
+    //printf("%d\n", checkpwd);
+    if(checkid == 0 && checkpwd == 0){
+        printf("Selamat anda telah berhasil login\n");
     }
     else {
-        fl = fopen("Record", "r");
-        while(fread(&admin, sizeof(admin), 1,fl)){
-            s = admin[a].userid;
-            r = admin[a].passwd;
-            if(s == id && r == pwd){
-                printf("Selamat anda telah berhasil login\n");
-            }
-        }
-        fclose(fl);
+        printf("User Id atau Password yang anda masukkan Salah!");
     }
+    fclose(fl);
+}
+
+void profile() {
+    FILE *fp;
+    char profile[100];
+    fp = fopen("Record.txt", "r");
+    fscanf(fp, "%[^\n]", profile);
+    printf("%s", profile);
+    fclose(fp);
 }
 
 void input() {
@@ -61,14 +92,16 @@ void input() {
     
 
 }
+
 int main () {
     
     int emp, c;
+    struct admin;
     do{
         printf("\n\t---Select your choice---------\n");
-        printf("\n\t1. Daftar\n\t2. Login\n\t3. SE");
-        printf("\n\t4. DELETE\n\t5. UPDATE\n\t6. SORT");
-        printf("\n\t7. EXIT");
+        printf("\n\t1. Daftar\n\t2. Login\n\t");
+        printf("\n\t3. Profile\n\t4. Update\n\t");
+        printf("\n\t5. EXIT");
         printf("\n\n------------------------------------------\n");
         printf("\nEnter your choice:");
         scanf("%d", &c);
@@ -76,18 +109,18 @@ int main () {
         switch (c)
         {
             case 1:
-            daftar();
+            daftar(admin);
             break; 
-            
             case 2:
             login();
-            break;/*
-            case 3:
-            search();
             break;
+            case 3:
+            profile();
+            break;
+            /*
             case 4:
             deletefile();
-            break;
+            break;typedef struct TransistorRec Transistor;
             case 5:
             update();
             break;
